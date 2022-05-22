@@ -7,4 +7,5 @@ geopy~=2.2.0
 pycountry_convert
 configparser~=5.2.0
 pymongo~=4.1.1
+pymongo[srv]
 regex_engine
