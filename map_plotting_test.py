@@ -1,24 +1,26 @@
+import os
+
+import bs4
 import json
+import configparser
 
 import numpy as np
 import pandas as pd
 
 from pycountry_convert import country_name_to_country_alpha2
 from geopy.geocoders import Nominatim
+
 import folium
 from folium.plugins import MarkerCluster
 
 from pymongo import MongoClient
-import configparser
 
 from regex_engine import generator
-
-import bs4
 
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-cluster = MongoClient(config['Database']['cluster'])
+cluster = MongoClient(os.environ.get('cluster'))
 db = cluster.TestBotDatabase
 collection = db.TestBotCollection
 
@@ -72,6 +74,13 @@ def get_not_empty_countries(quantities: dict) -> dict:
 
 
 def alpha2code(countries):
+    """
+    The alpha2code function takes a list of country names and returns a list of their corresponding alpha-2 codes.
+    If the country name is not recognized, it will return 'Unknown' for that country.
+
+    :param countries: Pass a list of country names to the function
+    :return: A list of the alpha2 codes for each country in the countries list
+    """
     code = []
     for country in countries:
         try:
@@ -85,21 +94,33 @@ def alpha2code(countries):
 
 
 def geolocate(country_codes):
+    """
+    The geolocate function takes a list of country codes and returns a list of tuples
+    containing the latitude and longitude for each country code.
+
+    :param country_codes: Pass in the country codes of the countries that are being geolocated
+    :return: A list of tuples, where each tuple contains the latitude and longitude for a country
+    """
     geolocator = Nominatim(user_agent="email@email.com")
     coordinates = []
     for country_code in country_codes:
         try:
-            # Geolocate the center of the country
             loc = geolocator.geocode(country_code)
-            # And return latitude and longitude
             coordinates.append((loc.latitude, loc.longitude))
-        except:
-            # Return missing value
+        except Exception as e:
+            print(e)
             coordinates.append(np.nan)
     return coordinates
 
 
 def create_dataframe(countries: dict):
+    """
+    The create_dataframe function creates a dataframe from the countries' dictionary.
+    It also adds the country code, latitude and longitude to the dataframe.
+
+    :param countries:dict: Pass a dictionary of countries and their respective quantities
+    :return: A dataframe with the country name, quantity of tweets and coordinates
+    """
     df = pd.DataFrame(countries.items(), columns=['Country', 'Quantity'])
 
     df['Code'] = alpha2code(df.Country)
@@ -109,10 +130,17 @@ def create_dataframe(countries: dict):
 
 
 def built_map(df: pd.DataFrame):
+    """
+    The built_map function takes a dataframe as an argument and returns a folium map object.
+    The function iterates through the rows of the dataframe, adding each row to a marker cluster on the map.
+    Each marker has radius 5, popup text that is formatted with Country and Quantity columns from the dataframe.
+
+    :param df:pd.DataFrame: Pass the dataframe that will be used to create the map
+    :return: A map of the world with the markers for each country
+    """
     world_map = folium.Map(tiles="cartodbpositron")
     marker_cluster = MarkerCluster().add_to(world_map)
 
-    # for each coordinate, create circlemarker of user percent
     for i in range(len(df)):
         lat = df.iloc[i]['Latitude']
         long = df.iloc[i]['Longitude']
@@ -130,7 +158,11 @@ def built_map(df: pd.DataFrame):
     world_map.save('templates/map.html')
 
 
-def create_map():
+def create_map() -> None:
+    """
+    The create_map function creates a map of the world with countries colored by their respective quantities.
+    The function takes no arguments and returns nothing.
+    """
     quantities = get_quantities()
     countries = get_not_empty_countries(quantities)
 
@@ -140,9 +172,14 @@ def create_map():
     # insert_tags()
 
 
-def insert_tags():
-    with open("templates/map.html") as input:
-        txt = input.read()
+def insert_tags() -> None:
+    """
+    The insert_tags function inserts a new link tag and title tag into the head of the map.html file.
+
+    :return: None
+    """
+    with open("templates/map.html") as input_html:
+        txt = input_html.read()
         soup = bs4.BeautifulSoup(txt, "lxml")
 
     new_link = soup.new_tag("link", rel="icon", href="/static/MSB_Logo_transparent.png")
@@ -151,8 +188,8 @@ def insert_tags():
     soup.head.append(new_link)
     soup.head.append(new_title)
 
-    with open("templates/map.html", "w") as output:
-        output.write(str(soup))
+    with open("templates/map.html", "w") as output_html:
+        output_html.write(str(soup))
 
 
 if __name__ == '__main__':
