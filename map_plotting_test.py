@@ -13,6 +13,8 @@ import configparser
 
 from regex_engine import generator
 
+import bs4
+
 config = configparser.ConfigParser()
 config.read("config.ini")
 
@@ -135,6 +137,22 @@ def create_map():
     df = create_dataframe(countries=countries)
 
     built_map(df=df)
+    insert_tags()
+
+
+def insert_tags():
+    with open("templates/map.html") as input:
+        txt = input.read()
+        soup = bs4.BeautifulSoup(txt, "lxml")
+
+    new_link = soup.new_tag("link", rel="icon", href="/static/MSB_Logo_transparent.png")
+    new_title = soup.new_tag("title")
+    new_title.string = "MSB Map"
+    soup.head.append(new_link)
+    soup.head.append(new_title)
+
+    with open("templates/map.html", "w") as output:
+        output.write(str(soup))
 
 
 if __name__ == '__main__':

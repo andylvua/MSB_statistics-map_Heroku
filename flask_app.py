@@ -5,9 +5,19 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def render_the_map():
-    mpt.create_map()
+def loading():
+    return render_template("loading.html")
+
+
+@app.route('/map')
+def show_map():
     return render_template("map.html")
+
+
+@app.route('/create_map')
+def create_map():
+    mpt.create_map()
+    return "Map created"
 
 
 if __name__ == '__main__':

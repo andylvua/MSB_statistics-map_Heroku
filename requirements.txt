@@ -10,3 +10,5 @@ pymongo~=4.1.1
 pymongo[srv]
 dnspython
 regex_engine
+bs4~=0.0.1
+beautifulsoup4~=4.11.1
