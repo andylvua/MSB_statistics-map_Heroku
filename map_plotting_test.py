@@ -137,7 +137,7 @@ def create_map():
     df = create_dataframe(countries=countries)
 
     built_map(df=df)
-    insert_tags()
+    # insert_tags()
 
 
 def insert_tags():
