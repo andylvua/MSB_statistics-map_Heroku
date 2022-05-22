@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e272774d20776adb0352dc732da284d0 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_e272774d20776adb0352dc732da284d0" ></div>
+        
+</body>
+<script>    
+    
+            var map_e272774d20776adb0352dc732da284d0 = L.map(
+                "map_e272774d20776adb0352dc732da284d0",
+                {
+                    center: [0, 0],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 1,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_30ab882b898ced6acbcc50f42c14d9a5 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_e272774d20776adb0352dc732da284d0);
+        
+    
+            var marker_cluster_4eed8a26c882c3e11dd511e48ccb64d1 = L.markerClusterGroup(
+                {}
+            );
+            map_e272774d20776adb0352dc732da284d0.addLayer(marker_cluster_4eed8a26c882c3e11dd511e48ccb64d1);
+        
+    
+            var circle_marker_58a186085169f296c6352f3a96f9cfbb = L.circleMarker(
+                [51.0834196, 10.4234469],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4eed8a26c882c3e11dd511e48ccb64d1);
+        
+    
+        var popup_05bb93b545811857c43e7c67f60a79d3 = L.popup({"maxWidth": 300});
+
+        
+            var html_91d2f6cafab69a3e658a0fa35b7d38cf = $(`<div id="html_91d2f6cafab69a3e658a0fa35b7d38cf" style="width: 100.0%; height: 100.0%;"><b>Country:</b> Germany<br>                         <b>Medicines:</b> 1<br></div>`)[0];
+            popup_05bb93b545811857c43e7c67f60a79d3.setContent(html_91d2f6cafab69a3e658a0fa35b7d38cf);
+        
+
+        circle_marker_58a186085169f296c6352f3a96f9cfbb.bindPopup(popup_05bb93b545811857c43e7c67f60a79d3)
+        ;
+
+        
+    
+    
+            var circle_marker_46c487853a257b8f19c86639b982caa0 = L.circleMarker(
+                [49.4871968, 31.2718321],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4eed8a26c882c3e11dd511e48ccb64d1);
+        
+    
+        var popup_088eff94eb41e4b8cb782a2b9bfa1128 = L.popup({"maxWidth": 300});
+
+        
+            var html_a7d10b1a02be78cdcb5c7e5ffff6cb4e = $(`<div id="html_a7d10b1a02be78cdcb5c7e5ffff6cb4e" style="width: 100.0%; height: 100.0%;"><b>Country:</b> Ukraine<br>                         <b>Medicines:</b> 2<br></div>`)[0];
+            popup_088eff94eb41e4b8cb782a2b9bfa1128.setContent(html_a7d10b1a02be78cdcb5c7e5ffff6cb4e);
+        
+
+        circle_marker_46c487853a257b8f19c86639b982caa0.bindPopup(popup_088eff94eb41e4b8cb782a2b9bfa1128)
+        ;
+
+        
+    
+    
+            var circle_marker_ff20477b47441bc959797808c982f2fb = L.circleMarker(
+                [50.6402809, 4.6667145],
+                {"bubblingMouseEvents": true, "color": "#3388ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3388ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(marker_cluster_4eed8a26c882c3e11dd511e48ccb64d1);
+        
+    
+        var popup_784915deab616d2f291db4123b8312a7 = L.popup({"maxWidth": 300});
+
+        
+            var html_6efbfb02eae70f9bc07da500bf92413f = $(`<div id="html_6efbfb02eae70f9bc07da500bf92413f" style="width: 100.0%; height: 100.0%;"><b>Country:</b> Belgium<br>                         <b>Medicines:</b> 1<br></div>`)[0];
+            popup_784915deab616d2f291db4123b8312a7.setContent(html_6efbfb02eae70f9bc07da500bf92413f);
+        
+
+        circle_marker_ff20477b47441bc959797808c982f2fb.bindPopup(popup_784915deab616d2f291db4123b8312a7)
+        ;
+
+        
+    
+</script>
