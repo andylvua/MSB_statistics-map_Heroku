@@ -8,42 +8,105 @@ from geopy.geocoders import Nominatim
 import folium
 from folium.plugins import MarkerCluster
 
+from pymongo import MongoClient
+import configparser
 
-def create_map():
-    with open("countries.json") as json_file:
-        countries_json = json.load(json_file)
+from regex_engine import generator
 
-    df = pd.DataFrame(countries_json.items(), columns=['Country', 'Quantity'])
+config = configparser.ConfigParser()
+config.read("config.ini")
 
-    def alpha2code(countries):
-        code = []
-        for country in countries:
-            try:
-                cn_a2_code = country_name_to_country_alpha2(country)
-                code.append(cn_a2_code)
-            except Exception as e:
-                print(e)
-                cn_a2_code = 'Unknown'
-                code.append(cn_a2_code)
-        return code
+cluster = MongoClient(config['Database']['cluster'])
+db = cluster.TestBotDatabase
+collection = db.TestBotCollection
 
-    def geolocate(country_codes):
-        geolocator = Nominatim(user_agent="email@email.com")
-        coordinates = []
-        for country_code in country_codes:
-            try:
-                # Geolocate the center of the country
-                loc = geolocator.geocode(country_code)
-                # And return latitude and longitude
-                coordinates.append((loc.latitude, loc.longitude))
-            except:
-                # Return missing value
-                coordinates.append(np.nan)
-        return coordinates
+
+def get_quantities() -> dict:
+    """
+    The get_quantities function takes a path to a json file containing country codes and returns
+    a dictionary with the quantities of countries that match the regex for each code.
+
+    :return: A dictionary with the country codes as keys and the number of documents that match each code as values
+    """
+    with open("country_codes.json") as json_file:
+        country_codes = json.load(json_file)
+
+    quantities = dict()
+    generate = generator()
+
+    for key, value in country_codes.items():
+        key_splitted = key.split("–")
+
+        if len(key_splitted) == 2:
+            key_pair = (int(key_splitted[0]), int(key_splitted[1]))
+            regex = generate.numerical_range(key_pair[0], key_pair[1]).strip("$")
+            quantity = collection.count_documents({"code": {'$regex': f'{regex}'}})
+        else:
+            int_key = int(key)
+            quantity = collection.count_documents({"code": {'$regex': f'^{int_key}'}})
+
+        quantities[value] = int(quantity)
+
+    return quantities
+
+
+def get_not_empty_countries(quantities: dict) -> dict:
+    """
+    The get_not_empty_countries function takes a dictionary of country names and quantities as input.
+    It returns a new dictionary containing only the countries that have at least one quantity greater than zero.
+
+    :param quantities: Store the quantities of each country
+    :return: A dictionary of countries that have values greater than 0 in the quantities dictionary
+    """
+    countries = dict()
+
+    for key, value in quantities.items():
+        if value != 0:
+            countries[key] = value
+        else:
+            continue
+
+    return countries
+
+
+def alpha2code(countries):
+    code = []
+    for country in countries:
+        try:
+            cn_a2_code = country_name_to_country_alpha2(country)
+            code.append(cn_a2_code)
+        except Exception as e:
+            print(e)
+            cn_a2_code = 'Unknown'
+            code.append(cn_a2_code)
+    return code
+
+
+def geolocate(country_codes):
+    geolocator = Nominatim(user_agent="email@email.com")
+    coordinates = []
+    for country_code in country_codes:
+        try:
+            # Geolocate the center of the country
+            loc = geolocator.geocode(country_code)
+            # And return latitude and longitude
+            coordinates.append((loc.latitude, loc.longitude))
+        except:
+            # Return missing value
+            coordinates.append(np.nan)
+    return coordinates
+
+
+def create_dataframe(countries: dict):
+    df = pd.DataFrame(countries.items(), columns=['Country', 'Quantity'])
 
     df['Code'] = alpha2code(df.Country)
     df = df.join(pd.DataFrame(geolocate(df.Code), columns=['Latitude', 'Longitude']))
 
+    return df
+
+
+def built_map(df: pd.DataFrame):
     world_map = folium.Map(tiles="cartodbpositron")
     marker_cluster = MarkerCluster().add_to(world_map)
 
@@ -63,3 +126,16 @@ def create_map():
         folium.CircleMarker(location=(lat, long), radius=radius, popup=popup, fill=True).add_to(marker_cluster)
 
     world_map.save('templates/map.html')
+
+
+def create_map():
+    quantities = get_quantities()
+    countries = get_not_empty_countries(quantities)
+
+    df = create_dataframe(countries=countries)
+
+    built_map(df=df)
+
+
+if __name__ == '__main__':
+    create_map()
